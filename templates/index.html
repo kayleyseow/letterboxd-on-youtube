@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letterboxd Watchlist to Free YouTube Movies</title>
+    
+    <!-- SEO Meta Description -->
+    <meta name="description" content="Check which movies from your Letterboxd watchlist are available to watch for free with ads on YouTube. Quickly find and stream your favorites!">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    
+    <!-- Open Graph / Facebook / Social Sharing -->
+    <meta property="og:title" content="Letterboxd Watchlist to Free YouTube Movies">
+    <meta property="og:description" content="Check which movies from your Letterboxd watchlist are free to watch on YouTube.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/">
+    <meta property="og:image" content="{{ url_for('static', filename='og-image.png') }}">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Letterboxd Watchlist to Free YouTube Movies">
+    <meta name="twitter:description" content="Check which movies from your Letterboxd watchlist are free to watch on YouTube.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='og-image.png') }}">
+    
+    <!-- Optional: PWA manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <button id="dark-mode-toggle" class="dark-toggle">🌙</button>
+
+    <div class="container">
+        <h1>Free Movie Finder 🍿</h1>
+        <p>Quickly find free-to-watch movies from your Letterboxd watchlist streaming on YouTube.</p>
+
+        <!-- <section class="instructions">
+            <h2>How it works:</h2>
+            <ol>
+                <li>Enter your <a href="https://letterboxd.com/" target="_blank">Letterboxd username</a> below.</li>
+                <li>We fetch your watchlist and compare it with YouTube's free movies.</li>
+                <li>Matches, ambiguous titles, and near misses will be displayed below.</li>
+            </ol>
+        </section> -->
+
+        <form id="watchlist-form">
+            <input type="text" id="username" placeholder="Your Letterboxd Username" required>
+            <button type="submit">Compare</button>
+        </form>
+
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p>⏳ Loading...</p>
+        </div>
+
+        <div id="results" class="hidden">
+            <ul id="movie-list"></ul>
+        </div>
+
+        <div id="error" class="hidden">
+            <p id="error-message"></p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+<footer class="site-footer">
+    <p>a weekend project from @<a href="https://github.com/kayleyseow" target="_blank">kayleyseow</a> | <a href="https://github.com/yourusername/yourrepo" target="_blank">Source Code</a></p>
+</footer>
+</html>
