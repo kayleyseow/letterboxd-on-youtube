@@ -1,5 +1,5 @@
-Flask
-letterboxdpy
+Flask==2.3.3
+git+https://github.com/nmcassa/letterboxdpy.git
 selenium
 webdriver-manager
-gunicorn
+gunicorn==21.2.0
