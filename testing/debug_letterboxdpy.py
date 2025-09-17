@@ -1,5 +1,5 @@
 from letterboxdpy.user import User
-user = User("miseenkale")
+user = User("ofea")
 # print(user)
 # print(user.recent['watchlist'])
 print("Number of movies on watchlist:", user.watchlist_length)

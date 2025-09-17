@@ -4,10 +4,10 @@ const toggleBtn = document.getElementById('dark-mode-toggle');
 function applyTheme(theme) {
     if (theme === 'dark') {
         document.body.classList.add('dark-mode');
-        toggleBtn.textContent = "☀️";
+        toggleBtn.textContent = "switch to light";
     } else {
         document.body.classList.remove('dark-mode');
-        toggleBtn.textContent = "🌙";
+        toggleBtn.textContent = "switch to dark";
     }
 }
 
@@ -26,7 +26,10 @@ function updateSpinner(stage) {
     const loadingText = document.querySelector("#loading p");
     switch(stage) {
         case "fetching":
-            loadingText.textContent = "📥 Fetching your Letterboxd watchlist...";
+            loadingText.textContent = "📥 Hang tight! Fetching your Letterboxd data...";
+            break;
+        case "gettingwatched":
+            loadingText.textContent = "📥 Fetching your logged films on Letterboxd...";
             break;
         case "processing":
             loadingText.textContent = "🔍 Processing your watchlist titles...";
@@ -42,26 +45,110 @@ function updateSpinner(stage) {
     }
 }
 
-// --- Render a results section ---
-function renderSection(title, items, formatter, container) {
-    const sectionHeader = document.createElement('h3');
-    sectionHeader.textContent = title;
-    container.appendChild(sectionHeader);
+function renderSection(title, items, renderItem, container, isHtml = false) {
+    if (!items || items.length === 0) return;
 
-    if (items.length === 0) {
-        const none = document.createElement('p');
-        none.textContent = "None found.";
-        container.appendChild(none);
-        return;
+    const list = document.createElement("ul");
+    items.forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = renderItem(item);
+        list.appendChild(li);
+    });
+
+    container.appendChild(list);
+}
+
+// --- Render a movie results section ---
+function renderMovieResults(title, sectionData, container, username) {
+    const baseUrl = `https://letterboxd.com/${username}`;
+    const sectionUrl = title.toLowerCase().includes("watchlist")
+        ? `${baseUrl}/watchlist/`
+        : `${baseUrl}/films/`;
+
+    // --- Matches ---
+    const matches = sectionData.matches?.length || 0;
+    let matchTitle = "";
+    if (matches === 0) {
+        matchTitle = `No matches from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
+    } else if (matches === 1) {
+        matchTitle = `1 match from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
+    } else {
+        matchTitle = `${matches} matches from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
+    }
+    const header = document.createElement("h3");
+    header.style.display = "flex";
+    header.style.justifyContent = "space-between";
+    header.style.alignItems = "center";
+    const titleSpan = document.createElement("span"); // add titlespan to hold HTML for the flexbox
+    titleSpan.innerHTML = matchTitle; // keep your HTML links
+    header.appendChild(titleSpan);
+
+    // Copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.textContent = '📋 Copy';
+    copyBtn.style.marginLeft = '1rem';
+    copyBtn.style.cursor = 'pointer';
+    copyBtn.addEventListener('click', () => {
+        const textToCopy = sectionData.matches.map(
+            m => `${m.yt_title} (${m.yt_year}) — ${m.yt_href}`
+            ).join('\n');
+            navigator.clipboard.writeText(textToCopy);
+            copyBtn.textContent = 'Copied to Clipboard! ✅';
+            setTimeout(() => (copyBtn.textContent = '📋 Copy'), 2000);
+    });
+    header.appendChild(copyBtn);
+    container.appendChild(header);
+
+    renderSection(
+        matchTitle,
+        sectionData.matches,
+        movie =>
+            `${movie.yt_title} (${movie.yt_year}) — <a href="${movie.yt_href}" target="_blank">YouTube</a>` +
+            (movie.lb_url ? ` | <a href="${movie.lb_url}" target="_blank">Letterboxd</a>` : ''),
+        container,
+        true // flag to say we’re passing HTML, not plain text
+    );
+
+    // --- Ambiguous Matches ---
+    const ambiguousCount = sectionData.ambiguous_matches?.length || 0;
+    if (ambiguousCount > 0) {
+        const ambiguousTitle =
+            ambiguousCount === 1
+                ? `1 ambiguous match from your <a href="${sectionUrl}" target="_blank">${title}</a>`
+                : `${ambiguousCount} ambiguous matches from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
+
+        renderSection(
+            ambiguousTitle,
+            sectionData.ambiguous_matches,
+            movie =>
+                `${movie.yt_title} (${movie.yt_year}) — <a href="${movie.yt_href}" target="_blank">YouTube</a>` +
+                (movie.lb_url ? ` | <a href="${movie.lb_url}" target="_blank">Letterboxd</a>` : '') +
+                ` [${movie.note}]`,
+            container,
+            true
+        );
     }
 
-    const ul = document.createElement('ul');
-    items.forEach(item => {
-        const li = document.createElement('li');
-        li.innerHTML = formatter(item);
-        ul.appendChild(li);
-    });
-    container.appendChild(ul);
+    // --- Near Misses ---
+    const nearMissCount = sectionData.near_misses?.length || 0;
+    if (nearMissCount > 0) {
+        const nearMissTitle =
+            nearMissCount === 1
+                ? `1 near miss from your <a href="${sectionUrl}" target="_blank">${title}</a>`
+                : `${nearMissCount} near misses from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
+
+        renderSection(
+            nearMissTitle,
+            sectionData.near_misses,
+            movie =>
+                `${movie.yt_title} (${movie.yt_year || "?"}) — <a href="${movie.yt_href}" target="_blank">YouTube</a>` +
+                (movie.lb_url ? ` | <a href="${movie.lb_url}" target="_blank">Letterboxd</a>` : '') +
+                ` [${movie.reason}]`,
+            container,
+            true
+        );
+    }
 }
 
 // --- Main form submit handler ---
@@ -124,37 +211,18 @@ document.getElementById('watchlist-form').addEventListener('submit', async funct
         // Stage: preparing
         updateSpinner("preparing");
 
-        // Render results
-        if (data.matches.length > 0) {
-            renderSection("✅ Matches", data.matches, movie =>
-                `${movie.yt_title} (${movie.yt_year}) — <a href="${movie.yt_href}" target="_blank">YouTube</a> | <a href="${movie.lb_url}" target="_blank">Letterboxd</a>`,
-                movieList
-            );
-        } else {
+        // }
+        renderMovieResults("watchlist", data.watchlist, movieList, data.username);
+        renderMovieResults("logged films", data.watched, movieList, data.username);
+
+        // Optionally, show a "No matches" message if both sections are empty
+        if (
+            (!data.watchlist.matches || data.watchlist.matches.length === 0) &&
+            (!data.watched.matches || data.watched.matches.length === 0)
+        ) {
             const noMatchMsg = document.createElement('p');
             noMatchMsg.innerHTML = `📭 No matches found! Check out the <a href="https://www.youtube.com/feed/storefront/" target="_blank">selection of free movies on YouTube</a>.`;
             movieList.appendChild(noMatchMsg);
-        }
-
-        // Only render Ambiguous Matches if there are any
-        if (data.ambiguous_matches.length > 0) {
-            // Optional example header
-            const ambiguousHeader = document.createElement('p');
-            ambiguousHeader.innerHTML = "Example: Red Eye (2005) — horror on a train vs. Red Eye — thriller on a plane";
-            movieList.appendChild(ambiguousHeader);
-
-            renderSection("⚠️ Ambiguous Matches", data.ambiguous_matches, movie =>
-                `${movie.yt_title} (${movie.yt_year}) — <a href="${movie.yt_href}" target="_blank">YouTube</a> | <a href="${movie.lb_url}" target="_blank">Letterboxd</a> [${movie.note}]`,
-                movieList
-            );
-        }
-
-        // Only render Near Misses if there are any
-        if (data.near_misses.length > 0) {
-            renderSection("❓ Near Misses", data.near_misses, movie =>
-                `${movie.yt_title} (${movie.yt_year || "?"}) — <a href="${movie.yt_href}" target="_blank">YouTube</a> | <a href="${movie.lb_url}" target="_blank">Letterboxd</a> [${movie.reason}]`,
-                movieList
-            );
         }
 
         loadingDiv.classList.add('hidden');

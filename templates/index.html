@@ -35,20 +35,11 @@
 
     <div class="container">
         <h1>Free Movie Finder 🍿</h1>
-        <p>Quickly find free-to-watch movies from your Letterboxd watchlist streaming on YouTube.</p>
-
-        <!-- <section class="instructions">
-            <h2>How it works:</h2>
-            <ol>
-                <li>Enter your <a href="https://letterboxd.com/" target="_blank">Letterboxd username</a> below.</li>
-                <li>We fetch your watchlist and compare it with YouTube's free movies.</li>
-                <li>Matches, ambiguous titles, and near misses will be displayed below.</li>
-            </ol>
-        </section> -->
+        <p>Find free-to-watch movies from your Letterboxd streaming on YouTube.</p>
 
         <form id="watchlist-form">
             <input type="text" id="username" placeholder="Your Letterboxd Username" required>
-            <button type="submit">Compare</button>
+            <button type="submit" class="action-btn">Compare</button>
         </form>
 
         <div id="loading" class="hidden">
@@ -63,11 +54,14 @@
         <div id="error" class="hidden">
             <p id="error-message"></p>
         </div>
+
+        <p>Made with Flask & the <a href = "https://github.com/nmcassa/letterboxdpy" target = "_blank">letterboxdpy</a> API</p>
+
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 <footer class="site-footer">
-    <p>a weekend project from @<a href="https://github.com/kayleyseow" target="_blank">kayleyseow</a> | <a href="https://github.com/yourusername/yourrepo" target="_blank">Source Code</a></p>
+    <p>a weekend project from @<a href="https://github.com/kayleyseow" target="_blank">kayleyseow</a> | <a href="https://github.com/kayleyseow/lettterboxd-watchlist-youtube" target="_blank">Code</a></p>
 </footer>
 </html>
