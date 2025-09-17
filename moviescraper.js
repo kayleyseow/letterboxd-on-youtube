@@ -1,3 +1,5 @@
+// Scrapes "Free with Ads" movies from YouTube Movies & Shows page.
+
 (async () => {
   const seen = new Map();
   let lastHeight = 0, stagnant = 0;
