@@ -67,14 +67,17 @@ function renderMovieResults(title, sectionData, container, username) {
 
     // --- Matches ---
     const matches = sectionData.matches?.length || 0;
+    
+    // If no matches, don't render anything at all
+    if (matches === 0) return;
+
     let matchTitle = "";
-    if (matches === 0) {
-        matchTitle = `No matches from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
-    } else if (matches === 1) {
+    if (matches === 1) {
         matchTitle = `1 match from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
     } else {
         matchTitle = `${matches} matches from your <a href="${sectionUrl}" target="_blank">${title}</a>`;
     }
+
     const header = document.createElement("h3");
     header.style.display = "flex";
     header.style.justifyContent = "space-between";
@@ -221,7 +224,7 @@ document.getElementById('watchlist-form').addEventListener('submit', async funct
             (!data.watched.matches || data.watched.matches.length === 0)
         ) {
             const noMatchMsg = document.createElement('p');
-            noMatchMsg.innerHTML = `📭 No matches found! Check out the <a href="https://www.youtube.com/feed/storefront/" target="_blank">selection of free movies on YouTube</a>.`;
+            noMatchMsg.innerHTML = `📭 No matches found! Check out the selection of <a href="https://www.youtube.com/feed/storefront/" target="_blank">free movies on YouTube</a> & log some more movies on your <a href="https://letterboxd.com/${data.username}" target="_blank">Letterboxd</a>!`;
             movieList.appendChild(noMatchMsg);
         }
 
