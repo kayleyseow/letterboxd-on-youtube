@@ -32,10 +32,16 @@
 </head>
 <body>
     <button id="dark-mode-toggle" class="dark-toggle">🌙</button>
+    <div class="spotlight"></div>
 
     <div class="container">
         <h1>Free Movie Finder 🍿</h1>
         <p>Find free-to-watch movies from your Letterboxd streaming on YouTube.</p>
+        
+        <div class="marquee-border top"></div>
+        <div class="marquee-border bottom"></div>
+        <div class="marquee-border left"></div>
+        <div class="marquee-border right"></div>
 
         <form id="watchlist-form">
             <input type="text" id="username" placeholder="Your Letterboxd Username" required>
@@ -60,6 +66,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='border.js') }}"></script>
 </body>
 <footer class="site-footer">
     <p>a weekend project from @<a href="https://github.com/kayleyseow" target="_blank">kayleyseow</a> | <a href="https://github.com/kayleyseow/lettterboxd-watchlist-youtube" target="_blank">Code</a></p>

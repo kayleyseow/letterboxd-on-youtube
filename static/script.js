@@ -4,10 +4,10 @@ const toggleBtn = document.getElementById('dark-mode-toggle');
 function applyTheme(theme) {
     if (theme === 'dark') {
         document.body.classList.add('dark-mode');
-        toggleBtn.textContent = "switch to light";
+        toggleBtn.textContent = "☀️";
     } else {
         document.body.classList.remove('dark-mode');
-        toggleBtn.textContent = "switch to dark";
+        toggleBtn.textContent = "🌙";
     }
 }
 

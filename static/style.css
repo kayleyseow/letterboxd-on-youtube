@@ -7,7 +7,7 @@
 }
 
 body {
-    background-color: #f4f4f9;
+    /* background-color: #f4f4f9; */
     color: #333;
     display: flex;
     flex-direction: column;
@@ -21,16 +21,26 @@ body {
 
 .container {
     max-width: 800px;
-    width: 100%;
+    width: 90%;
     background-color: #fff;
-    padding: 1rem 2rem;
+    padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     transition: background-color 0.3s, color 0.3s;
-    margin: 2rem auto 0 auto; /* centers container and adds top margin */
+    margin: 4rem auto;
+    position: relative;
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin: 2rem auto;
+        padding: 1rem;
+        width: 95%;
+    }
 }
 
 h1 {
+    font-family: 'Fredoka One', sans-serif;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
@@ -290,4 +300,77 @@ body.dark-mode .site-footer {
 
 .copy-btn:hover, .action-btn:hover {
     background-color: #2563eb;
+}
+
+/* Common styles for all borders */
+.marquee-border {
+    position: absolute;
+    font-family: monospace;
+    pointer-events: none;    /* click-through */
+    z-index: 999;
+}
+
+/* Horizontal borders: top & bottom */
+.marquee-border.top,
+.marquee-border.bottom {
+    display: flex;
+    justify-content: space-between; /* evenly spread bulbs */
+    left: 0;
+    right: 0;
+}
+
+.marquee-border.top { top: 0; }
+.marquee-border.bottom { bottom: 0; }
+
+/* Vertical borders: left & right */
+.marquee-border.left,
+.marquee-border.right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    top: 0;
+    bottom: 0;
+}
+
+.marquee-border.left { left: 0; align-items: flex-start; }
+.marquee-border.right { right: 0; align-items: flex-end; }
+
+.marquee-border span { display: inline-block; width: <bulbWidth>px; text-align: center; }
+.marquee-border div { height: <bulbHeight>px; line-height: <bulbHeight>px; }
+
+.marquee-border span,
+.marquee-border div {
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.marquee-border span.on,
+.marquee-border div.on {
+  color: #ffd700;
+  text-shadow: 0 0 6px #fff, 0 0 10px #ffd700;
+}
+
+/* Smaller bulbs on narrow screens */
+@media (max-width: 480px) {
+    .marquee-border span,
+    .marquee-border div {
+        font-size: 0.9rem;
+    }
+}
+
+/* Spotlight circle */
+.spotlight {
+  position: fixed;  /* follows the cursor across the page */
+  width: 300px;     /* overall spotlight size */
+  height: 300px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  /* Smaller solid center, soft outer glow */
+  background: radial-gradient(circle,
+              rgba(255, 255, 102, 0.4) 15%,  /* small bright center */
+              rgba(255, 255, 102, 0.15) 40%, /* mid glow */
+              rgba(255, 255, 102, 0) 80%);   /* fade to transparent at edges */
+
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;  /* glows over content */
 }
