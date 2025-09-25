@@ -196,6 +196,11 @@ document.getElementById('watchlist-form').addEventListener('submit', async funct
             body: JSON.stringify({ username: username })
         });
 
+        fetch("https://letterboxd-watchlist-youtube.onrender.com/ping")
+            .then(res => res.json())
+            .then(data => console.log("Ping response:", data))
+            .catch(err => console.error("Ping failed:", err));
+
         // Stage: processing
         updateSpinner("processing");
         const data = await response.json();

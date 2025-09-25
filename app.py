@@ -8,7 +8,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/compare": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}}) #only for render
+# CORS(app, resources={r"/compare": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}}) #only for render
+CORS(app)
 
 # Lowercase, remove punctuation, normalize unicode, replace & with 'and'
 def normalize_title(title):
@@ -55,6 +56,10 @@ def build_normalized_list(lb_movies):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/ping", methods=["GET"])
+def ping():
+    return {"ping": "pong"}
 
 @app.route("/compare", methods=["POST"])
 def compare_watchlists():
