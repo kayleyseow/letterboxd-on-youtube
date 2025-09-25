@@ -4,9 +4,11 @@ import re
 import unicodedata
 from flask import Flask, render_template, request, jsonify
 from letterboxdpy.user import User
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+CORS(app, resources={r"/compare": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}}) #only for render
 
 # Lowercase, remove punctuation, normalize unicode, replace & with 'and'
 def normalize_title(title):

@@ -183,7 +183,14 @@ document.getElementById('watchlist-form').addEventListener('submit', async funct
     updateSpinner("fetching");
 
     try {
-        const response = await fetch('/compare', {
+        // Uncomment for local
+        // const response = await fetch('/compare', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ username: username })
+        // });
+
+        const response = await fetch('https://letterboxd-watchlist-youtube.onrender.com/compare', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: username })
