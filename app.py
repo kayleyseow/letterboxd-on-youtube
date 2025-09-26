@@ -8,8 +8,11 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# CORS(app, resources={r"/compare": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}}) #only for render
-CORS(app)
+CORS(app, resources={
+    r"/compare": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"},
+    r"/ping": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}
+})
+# CORS(app)
 
 # Lowercase, remove punctuation, normalize unicode, replace & with 'and'
 def normalize_title(title):
