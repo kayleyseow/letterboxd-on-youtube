@@ -184,19 +184,24 @@ document.getElementById('watchlist-form').addEventListener('submit', async funct
 
     try {
         // Uncomment for local
-        // const response = await fetch('/compare', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ username: username })
-        // });
-
-        const response = await fetch('https://letterboxd-watchlist-youtube.onrender.com/compare', {
+        const response = await fetch('/compare', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: username })
         });
 
-        fetch("https://letterboxd-watchlist-youtube.onrender.com/ping")
+        // const response = await fetch('https://letterboxd-on-youtube.onrender.com/compare', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ username: username })
+        // });
+
+        // fetch("https://letterboxd-watchlist-youtube.onrender.com/ping")
+        //     .then(res => res.json())
+        //     .then(data => console.log("Ping response:", data))
+        //     .catch(err => console.error("Ping failed:", err));
+        
+        fetch("/ping")
             .then(res => res.json())
             .then(data => console.log("Ping response:", data))
             .catch(err => console.error("Ping failed:", err));

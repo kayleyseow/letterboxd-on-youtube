@@ -4,7 +4,7 @@ import re
 import unicodedata
 from flask import Flask, render_template, request, jsonify
 from letterboxdpy.user import User
-from flask_cors import CORS
+# from flask_corpythons import CORS
 
 app = Flask(__name__)
 
@@ -16,7 +16,7 @@ app = Flask(__name__)
 #     },
 #     r"/ping": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}
 # })
-CORS(app)
+# CORS(app)
 
 @app.before_request
 def log_origin():
