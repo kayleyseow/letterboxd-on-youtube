@@ -8,15 +8,15 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-CORS(app, resources={
-    r"/compare": {
-        "origins": ["https://www.letterboxd-on-youtube.kayleyseow.com"],
-        "methods": ["POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    },
-    r"/ping": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}
-})
-# CORS(app)
+# CORS(app, resources={
+#     r"/compare": {
+#         "origins": ["https://www.letterboxd-on-youtube.kayleyseow.com"],
+#         "methods": ["POST", "OPTIONS"],
+#         "allow_headers": ["Content-Type"]
+#     },
+#     r"/ping": {"origins": "https://www.letterboxd-on-youtube.kayleyseow.com"}
+# })
+CORS(app)
 
 @app.before_request
 def log_origin():
